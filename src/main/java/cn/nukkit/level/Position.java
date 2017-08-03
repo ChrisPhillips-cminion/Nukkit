@@ -11,6 +11,7 @@ import cn.nukkit.utils.LevelException;
  */
 public class Position extends Vector3 {
     public Level level;
+    protected String owner;
 
     public Position() {
         this(0, 0, 0, null);

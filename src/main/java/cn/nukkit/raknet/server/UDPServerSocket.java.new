@@ -37,7 +37,6 @@ public class UDPServerSocket extends ChannelInboundHandlerAdapter {
     }
 
     public UDPServerSocket(ThreadedLogger logger, int port, String interfaz) {
-logger.critical("    public UDPServerSocket(ThreadedLogger logger, int port, String interfaz) {");
         this.logger = logger;
         try {
             bootstrap = new Bootstrap();
@@ -55,7 +54,6 @@ logger.critical("    public UDPServerSocket(ThreadedLogger logger, int port, Str
     }
 
     public void close() {
-logger.critical("    public void close() {");
         this.group.shutdownGracefully();
         try {
             this.channel.closeFuture().sync();
@@ -65,12 +63,10 @@ logger.critical("    public void close() {");
     }
 
     public void clearPacketQueue() {
-logger.critical("    public void clearPacketQueue() {");
         this.packets.clear();
     }
 
     public DatagramPacket readPacket() throws IOException {
-logger.critical("    public DatagramPacket readPacket() throws IOException {");
       this.logger.critical("readPacket");
         return this.packets.poll();
     }
@@ -90,16 +86,12 @@ logger.critical("    public DatagramPacket readPacket() throws IOException {");
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-logger.critical("    public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {");
-  DatagramPacket dp = ((DatagramPacket) msg)
       System.out.println("channelRead "+msg);
-      System.out.println("channelRead "+pack.getData());
-        this.packets.add(dp);
+        this.packets.add((DatagramPacket) msg);
     }
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
-logger.critical("    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {");
       System.out.println("exceptionCaught "+cause);
         this.logger.warning(cause.getMessage(), cause);
     }

@@ -8,7 +8,6 @@ import cn.nukkit.raknet.protocol.EncapsulatedPacket;
  */
 public interface ServerInstance {
 
-
     void openSession(String identifier, String address, int port, long clientID);
 
     void closeSession(String identifier, String reason);

@@ -26,7 +26,6 @@ public class RakNetServer extends Thread {
     }
 
     public RakNetServer(ThreadedLogger logger, int port, String interfaz) {
-logger.critical("    public RakNetServer(ThreadedLogger logger, int port, String interfaz) {");
         this.port = port;
         if (port < 1 || port > 65536) {
             throw new IllegalArgumentException("Invalid port range");
@@ -42,22 +41,18 @@ logger.critical("    public RakNetServer(ThreadedLogger logger, int port, String
     }
 
     public boolean isShutdown() {
-logger.critical("    public boolean isShutdown() {");
         return shutdown;
     }
 
     public void shutdown() {
-logger.critical("    public void shutdown() {");
         this.shutdown = true;
     }
 
     public int getPort() {
-logger.critical("    public int getPort() {");
         return port;
     }
 
     public String getInterface() {
-logger.critical("    public String getInterface() {");
         return interfaz;
     }
 
@@ -91,8 +86,6 @@ logger.critical("    public String getInterface() {");
 
     private class ShutdownHandler extends Thread {
         public void run() {
-logger.critical("    public void run() {");
-
             if (!shutdown) {
                 logger.emergency("RakNet crashed!");
             }
@@ -101,10 +94,9 @@ logger.critical("    public void run() {");
 
     @Override
     public void run() {
-logger.critical("    public void run() {");
         this.setName("RakNet Thread #" + Thread.currentThread().getId());
         Runtime.getRuntime().addShutdownHook(new ShutdownHandler());
-        UDPServerSocket socket = new UDPServerSocket(logger, port, this.interfaz);
+        UDPServerSocket socket = new UDPServerSocket(this.getLogger(), port, this.interfaz);
         try {
             new SessionManager(this, socket);
         } catch (Exception e) {

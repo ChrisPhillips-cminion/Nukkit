@@ -49,7 +49,6 @@ public class SessionManager {
     protected String currentSource = "";
 
     public SessionManager(RakNetServer server, UDPServerSocket socket) throws Exception {
-this.getLogger().critical("    public SessionManager(RakNetServer server, UDPServerSocket socket) throws Exception {");
         this.server = server;
         this.socket = socket;
         this.registerPackets();
@@ -60,7 +59,6 @@ this.getLogger().critical("    public SessionManager(RakNetServer server, UDPSer
     }
 
     public int getPort() {
-this.getLogger().critical("    public int getPort() {");
         return this.server.port;
     }
 
@@ -69,12 +67,10 @@ this.getLogger().critical("    public int getPort() {");
     }
 
     public void run() throws Exception {
-this.getLogger().critical("    public void run() throws Exception {");
         this.tickProcessor();
     }
 
     private void tickProcessor() throws Exception {
-this.getLogger().critical("    private void tickProcessor() throws Exception {");
         this.lastMeasure = System.currentTimeMillis();
         while (!this.shutdown) {
             long start = System.currentTimeMillis();
@@ -107,7 +103,6 @@ this.getLogger().critical("    private void tickProcessor() throws Exception {")
     }
 
     private void tick() throws Exception {
-this.getLogger().critical("    private void tick() throws Exception {");
         long time = System.currentTimeMillis();
         for (Session session : new ArrayList<>(this.sessions.values())) {
             session.update(time);
@@ -146,7 +141,6 @@ this.getLogger().critical("    private void tick() throws Exception {");
     }
 
     private boolean receivePacket() throws Exception {
-this.getLogger().critical("    private boolean receivePacket() throws Exception {");
         DatagramPacket datagramPacket = this.socket.readPacket();
         if (datagramPacket != null) {
             // Check this early
@@ -211,24 +205,20 @@ this.getLogger().critical("    private boolean receivePacket() throws Exception 
     }
 
     public void sendPacket(Packet packet, String dest, int port) throws IOException {
-this.getLogger().critical("    public void sendPacket(Packet packet, String dest, int port) throws IOException {");
         packet.encode();
         this.sendBytes += this.socket.writePacket(packet.buffer, dest, port);
     }
 
     public void sendPacket(Packet packet, InetSocketAddress dest) throws IOException {
-this.getLogger().critical("    public void sendPacket(Packet packet, InetSocketAddress dest) throws IOException {");
         packet.encode();
         this.sendBytes += this.socket.writePacket(packet.buffer, dest);
     }
 
     public void streamEncapsulated(Session session, EncapsulatedPacket packet) {
-this.getLogger().critical("    public void streamEncapsulated(Session session, EncapsulatedPacket packet) {");
         this.streamEncapsulated(session, packet, RakNet.PRIORITY_NORMAL);
     }
 
     public void streamEncapsulated(Session session, EncapsulatedPacket packet, int flags) {
-this.getLogger().critical("    public void streamEncapsulated(Session session, EncapsulatedPacket packet, int flags) {");
         String id = session.getAddress() + ":" + session.getPort();
         byte[] buffer = Binary.appendBytes(
                 RakNet.PACKET_ENCAPSULATED,
@@ -252,7 +242,6 @@ this.getLogger().critical("    public void streamEncapsulated(Session session, E
     }
 
     protected void streamClose(String identifier, String reason) {
-this.getLogger().critical("    protected void streamClose(String identifier, String reason) {");
         byte[] buffer = Binary.appendBytes(
                 RakNet.PACKET_CLOSE_SESSION,
                 new byte[]{(byte) (identifier.length() & 0xff)},
@@ -264,7 +253,6 @@ this.getLogger().critical("    protected void streamClose(String identifier, Str
     }
 
     protected void streamInvalid(String identifier) {
-this.getLogger().critical("    protected void streamInvalid(String identifier) {");
         byte[] buffer = Binary.appendBytes(
                 RakNet.PACKET_INVALID_SESSION,
                 new byte[]{(byte) (identifier.length() & 0xff)},
@@ -274,7 +262,6 @@ this.getLogger().critical("    protected void streamInvalid(String identifier) {
     }
 
     protected void streamOpen(Session session) {
-this.getLogger().critical("    protected void streamOpen(Session session) {");
         String identifier = session.getAddress() + ":" + session.getPort();
         byte[] buffer = Binary.appendBytes(
                 RakNet.PACKET_OPEN_SESSION,
@@ -289,7 +276,6 @@ this.getLogger().critical("    protected void streamOpen(Session session) {");
     }
 
     protected void streamACK(String identifier, int identifierACK) {
-this.getLogger().critical("    protected void streamACK(String identifier, int identifierACK) {");
         byte[] buffer = Binary.appendBytes(
                 RakNet.PACKET_ACK_NOTIFICATION,
                 new byte[]{(byte) (identifier.length() & 0xff)},
@@ -300,7 +286,6 @@ this.getLogger().critical("    protected void streamACK(String identifier, int i
     }
 
     protected void streamOption(String name, String value) {
-this.getLogger().critical("    protected void streamOption(String name, String value) {");
         byte[] buffer = Binary.appendBytes(
                 RakNet.PACKET_SET_OPTION,
                 new byte[]{(byte) (name.length() & 0xff)},
@@ -311,7 +296,6 @@ this.getLogger().critical("    protected void streamOption(String name, String v
     }
 
     private void checkSessions() {
-this.getLogger().critical("    private void checkSessions() {");
         int size = this.sessions.size();
         if (size > 4096) {
             List<String> keyToRemove = new ArrayList<>();
@@ -333,7 +317,6 @@ this.getLogger().critical("    private void checkSessions() {");
     }
 
     public boolean receiveStream() throws Exception {
-this.getLogger().critical("    public boolean receiveStream() throws Exception {");
         byte[] packet = this.server.readMainToThreadPacket();
         if (packet != null && packet.length > 0) {
             byte id = packet[0];
@@ -420,12 +403,10 @@ this.getLogger().critical("    public boolean receiveStream() throws Exception {
     }
 
     public void blockAddress(String address) {
-this.getLogger().critical("    public void blockAddress(String address) {");
         this.blockAddress(address, 300);
     }
 
     public void blockAddress(String address, int timeout) {
-this.getLogger().critical("    public void blockAddress(String address, int timeout) {");
         long finalTime = System.currentTimeMillis() + timeout * 1000;
         if (!this.block.containsKey(address) || timeout == -1) {
             if (timeout == -1) {
@@ -440,7 +421,6 @@ this.getLogger().critical("    public void blockAddress(String address, int time
     }
 
     public Session getSession(String ip, int port) {
-this.getLogger().critical("    public Session getSession(String ip, int port) {");
         String id = ip + ":" + port;
         if (!this.sessions.containsKey(id)) {
             this.checkSessions();
@@ -454,12 +434,10 @@ this.getLogger().critical("    public Session getSession(String ip, int port) {"
     }
 
     public void removeSession(Session session) throws Exception {
-this.getLogger().critical("    public void removeSession(Session session) throws Exception {");
         this.removeSession(session, "unknown");
     }
 
     public void removeSession(Session session, String reason) throws Exception {
-this.getLogger().critical("    public void removeSession(Session session, String reason) throws Exception {");
         String id = session.getAddress() + ":" + session.getPort();
         if (this.sessions.containsKey(id)) {
             this.sessions.get(id).close();
@@ -469,37 +447,30 @@ this.getLogger().critical("    public void removeSession(Session session, String
     }
 
     public void openSession(Session session) {
-this.getLogger().critical("    public void openSession(Session session) {");
         this.streamOpen(session);
     }
 
     public void notifyACK(Session session, int identifierACK) {
-this.getLogger().critical("    public void notifyACK(Session session, int identifierACK) {");
         this.streamACK(session.getAddress() + ":" + session.getPort(), identifierACK);
     }
 
     public String getName() {
-this.getLogger().critical("    public String getName() {");
         return name;
     }
 
     public long getID() {
-this.getLogger().critical("    public long getID() {");
         return this.serverId;
     }
 
     private void registerPacket(byte id, Packet.PacketFactory factory) {
-this.getLogger().critical("    private void registerPacket(byte id, Packet.PacketFactory factory) {");
         this.packetPool[id & 0xFF] = factory;
     }
 
     public Packet getPacketFromPool(byte id) {
-this.getLogger().critical("    public Packet getPacketFromPool(byte id) {");
         return this.packetPool[id & 0xFF].create();
     }
 
     private void registerPackets() {
-this.getLogger().critical("    private void registerPackets() {");
         // fill with dummy returning null
         Arrays.fill(this.packetPool, (Packet.PacketFactory) () -> null);
 

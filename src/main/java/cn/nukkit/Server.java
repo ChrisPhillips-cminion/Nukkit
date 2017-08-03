@@ -216,6 +216,7 @@ public class Server {
         this.console = new CommandReader();
         //todo: VersionString 现在不必要
 
+        System.out.println("DataPath " + this.dataPath );
         if (!new File(this.dataPath + "nukkit.yml").exists()) {
             this.getLogger().info(TextFormat.GREEN + "Welcome! Please choose a language first!");
             try {

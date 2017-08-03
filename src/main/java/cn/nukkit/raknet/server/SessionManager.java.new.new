@@ -65,6 +65,7 @@ this.getLogger().critical("    public int getPort() {");
     }
 
     public ThreadedLogger getLogger() {
+this.getLogger().critical("    public ThreadedLogger getLogger() {");
         return this.server.getLogger();
     }
 

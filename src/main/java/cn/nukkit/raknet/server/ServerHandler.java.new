@@ -3,7 +3,6 @@ package cn.nukkit.raknet.server;
 import cn.nukkit.raknet.RakNet;
 import cn.nukkit.raknet.protocol.EncapsulatedPacket;
 import cn.nukkit.utils.Binary;
-import cn.nukkit.utils.ThreadedLogger;
 
 import java.nio.charset.StandardCharsets;
 
@@ -18,19 +17,15 @@ public class ServerHandler {
     protected final ServerInstance instance;
 
     public ServerHandler(RakNetServer server, ServerInstance instance) {
-
         this.server = server;
         this.instance = instance;
-        this.getLogger().critical("    public ServerHandler(RakNetServer server, ServerInstance instance) {");
     }
 
     public void sendEncapsulated(String identifier, EncapsulatedPacket packet) {
-this.getLogger().critical("    public void sendEncapsulated(String identifier, EncapsulatedPacket packet) {");
         this.sendEncapsulated(identifier, packet, RakNet.PRIORITY_NORMAL);
     }
 
     public void sendEncapsulated(String identifier, EncapsulatedPacket packet, int flags) {
-this.getLogger().critical("    public void sendEncapsulated(String identifier, EncapsulatedPacket packet, int flags) {");
         byte[] buffer = Binary.appendBytes(
                 RakNet.PACKET_ENCAPSULATED,
                 new byte[]{(byte) (identifier.length() & 0xff)},
@@ -40,9 +35,7 @@ this.getLogger().critical("    public void sendEncapsulated(String identifier, E
         );
         this.server.pushMainToThreadPacket(buffer);
     }
-    public ThreadedLogger getLogger() {
-      return this.server.getLogger();
-    }
+
     public void sendRaw(String address, int port, byte[] payload) {
         byte[] buffer = Binary.appendBytes(
                 RakNet.PACKET_RAW,
@@ -55,7 +48,6 @@ this.getLogger().critical("    public void sendEncapsulated(String identifier, E
     }
 
     public void closeSession(String identifier, String reason) {
-this.getLogger().critical("    public void closeSession(String identifier, String reason) {");
         byte[] buffer = Binary.appendBytes(
                 RakNet.PACKET_CLOSE_SESSION,
                 new byte[]{(byte) (identifier.length() & 0xff)},
@@ -67,7 +59,6 @@ this.getLogger().critical("    public void closeSession(String identifier, Strin
     }
 
     public void sendOption(String name, String value) {
-this.getLogger().critical("    public void sendOption(String name, String value) {");
         byte[] buffer = Binary.appendBytes(
                 RakNet.PACKET_SET_OPTION,
                 new byte[]{(byte) (name.length() & 0xff)},
@@ -78,7 +69,6 @@ this.getLogger().critical("    public void sendOption(String name, String value)
     }
 
     public void blockAddress(String address, int timeout) {
-this.getLogger().critical("    public void blockAddress(String address, int timeout) {");
         byte[] buffer = Binary.appendBytes(
                 RakNet.PACKET_BLOCK_ADDRESS,
                 new byte[]{(byte) (address.length() & 0xff)},
@@ -89,7 +79,6 @@ this.getLogger().critical("    public void blockAddress(String address, int time
     }
 
     public void shutdown() {
-this.getLogger().critical("    public void shutdown() {");
         this.server.pushMainToThreadPacket(new byte[]{RakNet.PACKET_SHUTDOWN});
         this.server.shutdown();
         synchronized (this) {
@@ -107,13 +96,11 @@ this.getLogger().critical("    public void shutdown() {");
     }
 
     public void emergencyShutdown() {
-this.getLogger().critical("    public void emergencyShutdown() {");
         this.server.shutdown();
         this.server.pushMainToThreadPacket(new byte[]{RakNet.PACKET_EMERGENCY_SHUTDOWN});
     }
 
     protected void invalidSession(String identifier) {
-this.getLogger().critical("    protected void invalidSession(String identifier) {");
         byte[] buffer = Binary.appendBytes(
                 RakNet.PACKET_INVALID_SESSION,
                 new byte[]{(byte) (identifier.length() & 0xff)},
@@ -123,13 +110,11 @@ this.getLogger().critical("    protected void invalidSession(String identifier) 
     }
 
     public boolean handlePacket() {
-// this.getLogger().critical("    public boolean handlePacket() {");
         byte[] packet = this.server.readThreadToMainPacket();
         if (packet != null && packet.length > 0) {
             byte id = packet[0];
             int offset = 1;
             if (id == RakNet.PACKET_ENCAPSULATED) {
-              this.getLogger().critical("RakNet.PACKET_ENCAPSULATED");
                 int len = packet[offset++];
                 String identifier = new String(Binary.subBytes(packet, offset, len), StandardCharsets.UTF_8);
                 offset += len;
@@ -137,7 +122,6 @@ this.getLogger().critical("    protected void invalidSession(String identifier) 
                 byte[] buffer = Binary.subBytes(packet, offset);
                 this.instance.handleEncapsulated(identifier, EncapsulatedPacket.fromBinary(buffer, true), flags);
             } else if (id == RakNet.PACKET_RAW) {
-              this.getLogger().critical("RakNet.PACKET_RAW");
                 int len = packet[offset++];
                 String address = new String(Binary.subBytes(packet, offset, len), StandardCharsets.UTF_8);
                 offset += len;
@@ -146,14 +130,12 @@ this.getLogger().critical("    protected void invalidSession(String identifier) 
                 byte[] payload = Binary.subBytes(packet, offset);
                 this.instance.handleRaw(address, port, payload);
             } else if (id == RakNet.PACKET_SET_OPTION) {
-              this.getLogger().critical("RakNet.PACKET_SET_OPTION");
                 int len = packet[offset++];
                 String name = new String(Binary.subBytes(packet, offset, len), StandardCharsets.UTF_8);
                 offset += len;
                 String value = new String(Binary.subBytes(packet, offset), StandardCharsets.UTF_8);
                 this.instance.handleOption(name, value);
             } else if (id == RakNet.PACKET_OPEN_SESSION) {
-              this.getLogger().critical("RakNet.PACKET_OPEN_SESSION");
                 int len = packet[offset++];
                 String identifier = new String(Binary.subBytes(packet, offset, len), StandardCharsets.UTF_8);
                 offset += len;
@@ -165,7 +147,6 @@ this.getLogger().critical("    protected void invalidSession(String identifier) 
                 long clientID = Binary.readLong(Binary.subBytes(packet, offset, 8));
                 this.instance.openSession(identifier, address, port, clientID);
             } else if (id == RakNet.PACKET_CLOSE_SESSION) {
-              this.getLogger().critical("RakNet.PACKET_CLOSE_SESSION");
                 int len = packet[offset++];
                 String identifier = new String(Binary.subBytes(packet, offset, len), StandardCharsets.UTF_8);
                 offset += len;
@@ -173,12 +154,10 @@ this.getLogger().critical("    protected void invalidSession(String identifier) 
                 String reason = new String(Binary.subBytes(packet, offset, len), StandardCharsets.UTF_8);
                 this.instance.closeSession(identifier, reason);
             } else if (id == RakNet.PACKET_INVALID_SESSION) {
-              this.getLogger().critical("RakNet.PACKET_INVALID_SESSION");
                 int len = packet[offset++];
                 String identifier = new String(Binary.subBytes(packet, offset, len), StandardCharsets.UTF_8);
                 this.instance.closeSession(identifier, "Invalid session");
             } else if (id == RakNet.PACKET_ACK_NOTIFICATION) {
-              this.getLogger().critical("RakNet.PACKET_ACK_NOTIFICATION");
                 int len = packet[offset++];
                 String identifier = new String(Binary.subBytes(packet, offset, len), StandardCharsets.UTF_8);
                 offset += len;

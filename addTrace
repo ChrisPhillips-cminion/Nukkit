@@ -1,0 +1,19 @@
+#!/bin/sh
+IFS=$'\n'
+if [ -z $1 ] ; then
+  echo "addTrace <path to java file> [<output command>]"
+  exit 0
+fi
+if [ -z $2 ] ; then
+  outputcmd="this.getLogger().critical"
+else
+  outputcmd=$2
+fi
+
+cp $1 $1.old
+for i in $(cat $1 | grep -ie "private\|public\|protected" | grep -v \ class\ | grep \{ )
+do
+
+  j="$outputcmd(\"$i\");"
+  gsed -i  s/"$i"/"$i\n$j"/ $1
+done
